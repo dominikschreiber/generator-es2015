@@ -13,7 +13,12 @@ export default class Generator extends Base {
 
     prompting() {
         const done = this.async();
-        const withTrailingSlash = path => (path.slice(-1) === '/') ? path : `${path}/`;
+        const withSlashes = path => {
+            let shouldPrepend = path.slice(0,2) !== './';
+            let shouldAppend = path.slice(-1) !== '/';
+
+            return `${shouldPrepend ? './' : ''}${path}${shouldAppend ? '/' : ''}`;
+        };
 
         this.prompt([{
             type: 'input',
@@ -24,27 +29,27 @@ export default class Generator extends Base {
             type: 'input',
             name: 'target',
             message: 'the generated sources target',
-            default: 'lib/'
+            default: './lib/'
         }, {
             type: 'input',
             name: 'testtarget',
             message: 'the generated tests target',
-            default: 'test/'
+            default: './test/'
         }, {
             type: 'input',
             name: 'src',
             message: 'the source files',
-            default: 'src/main/'
+            default: './src/main/'
         }, {
             type: 'input',
             name: 'testsrc',
             message: 'the test files',
-            default: 'src/test/'
+            default: './src/test/'
         }], answers => {
             this.choices = {
                 appname: answers.appname,
-                src: { main: withTrailingSlash(answers.src), test: withTrailingSlash(answers.testsrc) },
-                target: { main: withTrailingSlash(answers.target), test: withTrailingSlash(answers.testtarget) }
+                src: { main: withSlashes(answers.src), test: withSlashes(answers.testsrc) },
+                target: { main: withSlashes(answers.target), test: withSlashes(answers.testtarget) }
             };
 
             done();
@@ -52,10 +57,20 @@ export default class Generator extends Base {
     }
 
     writing() {
-        new Gruntfile(this.gruntfile, this.choices).save();
+        let templates = new Map();
+        templates.set('package.json', 'package.json');
+        templates.set('bower.json', 'bower.json');
+        templates.set('.jshintrc', '.jshintrc');
+        templates.set('src/main/index.js', `${this.choices.src.main}index.js`);
+        templates.set('src/test/index.spec.js', `${this.choices.src.test}index.spec.js`);
 
-        this.fs.copyTpl(this.templatePath('.jshintrc'), this.destinationPath('.jshintrc'), this.choices);
-        this.fs.copyTpl(this.templatePath('src/main/index.js'), this.destinationPath(`${this.choices.src.main}index.js`), this.choices);
-        this.fs.copyTpl(this.templatePath('src/test/index.spec.js'), this.destinationPath(`${this.choices.src.test}index.spec.js`), this.choices);
+        new Gruntfile(this.gruntfile, this.choices).save();
+        for (let [template, destination] of templates) {
+            this.fs.copyTpl(this.templatePath(template), this.destinationPath(destination), this.choices);
+        }
+    }
+
+    install() {
+        this.installDependencies();
     }
 }

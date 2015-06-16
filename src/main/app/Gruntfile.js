@@ -14,6 +14,7 @@ export class Gruntfile {
         config.set('babel', this._createConfigBabel());
         config.set('copy', this._createConfigCopy());
         config.set('mocha_istanbul', this._createConfigMocha());
+        config.set('watch', this._createConfigWatch());
 
         return config;
     }
@@ -90,9 +91,41 @@ export class Gruntfile {
         };
     }
 
+    _createConfigWatch() {
+        return {
+            sources: {
+                files: Object.keys(this.choices.src).map(k => `${this.choices.src[k]}**/*.js`),
+                tasks: ['test']
+            }
+        };
+    }
+
+    createLifecycle() {
+        let lifecycle = new Map();
+
+        lifecycle.set('validate-only', ['jshint']);
+        lifecycle.set('validate', ['validate-only']);
+        lifecycle.set('compile-only', ['babel', 'copy']);
+        lifecycle.set('compile', ['validate', 'compile-only']);
+        lifecycle.set('test-only', ['mocha_istanbul']);
+        lifecycle.set('test', ['compile', 'test-only']);
+        lifecycle.set('install', ['test']);
+        lifecycle.set('default', ['clean', 'install']);
+        lifecycle.set('serve-only', ['watch']);
+        lifecycle.set('serve', ['clean', 'serve-only']);
+
+        return lifecycle;
+    }
+
     save() {
+        this.gruntfile.prependJavaScript('require("load-grunt-tasks")(grunt)');
+        this.gruntfile.prependJavaScript('grunt.event.on("coverage", function(lcov, done) { require("coveralls").handleInput(lcov, function(err) { if (err) { return done(err); } done(); }); });');
+        
         for (let [task, config] of this.createConfig().entries()) {
             this.gruntfile.insertConfig(task, JSON.stringify(config));
+        }
+        for (let [step, tasks] of this.createLifecycle().entries()) {
+            this.gruntfile.registerTask(step, tasks);
         }
     }
 }
