@@ -28,6 +28,7 @@ var Gruntfile = (function () {
             config.set('babel', this._createConfigBabel());
             config.set('copy', this._createConfigCopy());
             config.set('mocha_istanbul', this._createConfigMocha());
+            config.set('watch', this._createConfigWatch());
 
             return config;
         }
@@ -105,8 +106,43 @@ var Gruntfile = (function () {
             };
         }
     }, {
+        key: '_createConfigWatch',
+        value: function _createConfigWatch() {
+            var _this = this;
+
+            return {
+                sources: {
+                    files: Object.keys(this.choices.src).map(function (k) {
+                        return '' + _this.choices.src[k] + '**/*.js';
+                    }),
+                    tasks: ['test']
+                }
+            };
+        }
+    }, {
+        key: 'createLifecycle',
+        value: function createLifecycle() {
+            var lifecycle = new Map();
+
+            lifecycle.set('validate-only', ['jshint']);
+            lifecycle.set('validate', ['validate-only']);
+            lifecycle.set('compile-only', ['babel', 'copy']);
+            lifecycle.set('compile', ['validate', 'compile-only']);
+            lifecycle.set('test-only', ['mocha_istanbul']);
+            lifecycle.set('test', ['compile', 'test-only']);
+            lifecycle.set('install', ['test']);
+            lifecycle.set('default', ['clean', 'install']);
+            lifecycle.set('serve-only', ['watch']);
+            lifecycle.set('serve', ['clean', 'serve-only']);
+
+            return lifecycle;
+        }
+    }, {
         key: 'save',
         value: function save() {
+            this.gruntfile.prependJavaScript('require("load-grunt-tasks")(grunt)');
+            this.gruntfile.prependJavaScript('grunt.event.on("coverage", function(lcov, done) { require("coveralls").handleInput(lcov, function(err) { if (err) { return done(err); } done(); }); });');
+
             var _iteratorNormalCompletion = true;
             var _didIteratorError = false;
             var _iteratorError = undefined;
@@ -131,6 +167,34 @@ var Gruntfile = (function () {
                 } finally {
                     if (_didIteratorError) {
                         throw _iteratorError;
+                    }
+                }
+            }
+
+            var _iteratorNormalCompletion2 = true;
+            var _didIteratorError2 = false;
+            var _iteratorError2 = undefined;
+
+            try {
+                for (var _iterator2 = this.createLifecycle().entries()[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                    var _step2$value = _slicedToArray(_step2.value, 2);
+
+                    var step = _step2$value[0];
+                    var tasks = _step2$value[1];
+
+                    this.gruntfile.registerTask(step, tasks);
+                }
+            } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
+            } finally {
+                try {
+                    if (!_iteratorNormalCompletion2 && _iterator2['return']) {
+                        _iterator2['return']();
+                    }
+                } finally {
+                    if (_didIteratorError2) {
+                        throw _iteratorError2;
                     }
                 }
             }
