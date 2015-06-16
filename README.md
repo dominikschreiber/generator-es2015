@@ -2,7 +2,7 @@
 
 [![travis build](https://img.shields.io/travis/dominikschreiber/generator-es2015.svg?style=flat-square)](http://travis-ci.org/dominikschreiber/generator-es2015)
 [![coveralls report](https://img.shields.io/coveralls/dominikschreiber/generator-es2015.svg?style=flat-square)](https://coveralls.io/r/dominikschreiber/generator-es2015)
-[![MIT license](https://img.shields.io/github/license/dominikschreiber/generator-es2015.svg?style=flat-square)](https://github.com/dominikschreiber/generator-es2015/LICENSE)
+[![MIT license](https://img.shields.io/github/license/dominikschreiber/generator-es2015.svg?style=flat-square)](https://github.com/dominikschreiber/generator-es2015/blob/master/LICENSE)
 
 Generate ES2015 projects that transpile your code using
 [BabelJS](https://babeljs.io) and can directly be tested with
@@ -38,4 +38,4 @@ adds code to make your es2015 stuff happen in es5).
 
 ## license
 
-This project is [MIT-licensed](LICENSE).
+This project is [MIT-licensed](https://github.com/dominikschreiber/generator-es2015/blob/master/LICENSE).
