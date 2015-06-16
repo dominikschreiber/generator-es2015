@@ -2,9 +2,10 @@
 
 import {equal} from 'assert';
 
+import {<%= appname %>} from '<%= target.test.split("/").filter(function(e) { return e !== "." && e }).map(function() {return ".."}).join("/").slice(0,-1) + target.main + appname %>';
+
 describe('<%= appname %>', () => {
-    it('should compute 1+1=2', done => {
-        equal(1 + 1, 2);
-        done();
+    it('should greet', () => {
+        equal(new <%= appname %>.hi(), 'Hello World!');
     });
 });

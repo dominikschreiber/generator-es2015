@@ -6,4 +6,8 @@ export default class <%= appname %> {
     constructor(...args) {
         
     }
+
+    hi() {
+        return 'Hello World!';
+    }
 }
