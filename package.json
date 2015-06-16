@@ -6,7 +6,7 @@
   "scripts": {
     "start": "./node_modules/.bin/grunt",
     "serve": "./node_modules/.bin/grunt serve",
-    "test": "./node_modules/.bin/grunt test"
+    "test": "./node_modules/.bin/grunt clean test"
   },
   "repository": {
     "type": "git",
@@ -35,7 +35,6 @@
     "grunt-mocha-istanbul": "^2.4.0",
     "istanbul": "^0.3.15",
     "load-grunt-tasks": "^3.2.0",
-    "lodash": "^3.9.3",
     "mocha": "^2.2.5"
   },
   "dependencies": {
