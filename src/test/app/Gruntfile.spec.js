@@ -24,7 +24,11 @@ describe('Gruntfile', () => {
     let gruntfile;
     
     before(() => {
-        gruntfile = new Gruntfile(new Mock());
+        gruntfile = new Gruntfile(new Mock(), {
+            appname: 'TestApp',
+            src: { main: './src/main/', test: './src/test/' },
+            target: { main: './lib/', test: './test/' }
+        });
         gruntfile.save();
     });
 

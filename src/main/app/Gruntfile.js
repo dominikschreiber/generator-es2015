@@ -1,8 +1,9 @@
 'use strict';
 
 export class Gruntfile {
-    constructor(gruntfile) {
+    constructor(gruntfile, choices) {
         this.gruntfile = gruntfile;
+        this.choices = choices;
     }
 
     createConfig() {
@@ -38,15 +39,15 @@ export class Gruntfile {
         return {
             compile: {
                 expand: true,
-                cwd: './src/main',
+                cwd: this.choices.src.main,
                 src: ['**/*.js', '!*/templates/**/*'],
-                dest: './generators'
+                dest: this.choices.target.main
             },
             testCompile: {
                 expand: true,
-                cwd: './src/test',
+                cwd: this.choices.src.test,
                 src: ['**/*.js', '!*/fixtures/**/*'],
-                dest: './test'
+                dest: this.choices.target.test
             }
         };
     }

@@ -11,10 +11,11 @@ function _slicedToArray(arr, i) { if (Array.isArray(arr)) { return arr; } else i
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var Gruntfile = (function () {
-    function Gruntfile(gruntfile) {
+    function Gruntfile(gruntfile, choices) {
         _classCallCheck(this, Gruntfile);
 
         this.gruntfile = gruntfile;
+        this.choices = choices;
     }
 
     _createClass(Gruntfile, [{
@@ -51,15 +52,15 @@ var Gruntfile = (function () {
             return {
                 compile: {
                     expand: true,
-                    cwd: './src/main',
+                    cwd: this.choices.src.main,
                     src: ['**/*.js', '!*/templates/**/*'],
-                    dest: './generators'
+                    dest: this.choices.target.main
                 },
                 testCompile: {
                     expand: true,
-                    cwd: './src/test',
+                    cwd: this.choices.src.test,
                     src: ['**/*.js', '!*/fixtures/**/*'],
-                    dest: './test'
+                    dest: this.choices.target.test
                 }
             };
         }
