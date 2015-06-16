@@ -23,6 +23,6 @@ describe('app', () => {
     });
 
     it('should create a meaningful index.js', () => {
-        assert.fileContent('./src/main/index.js', /export default class TestApp {/);
+        assert.fileContent('./src/main/index.js', /export class TestApp {/);
     });
 });

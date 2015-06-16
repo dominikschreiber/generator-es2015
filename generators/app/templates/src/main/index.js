@@ -2,7 +2,7 @@
 
 import 'babel/polyfill';
 
-export default class <%= appname %> {
+export class <%= appname %> {
     constructor(...args) {
         
     }
