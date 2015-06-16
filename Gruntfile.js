@@ -5,61 +5,101 @@ module.exports = function(grunt) {
 
     grunt.initConfig({
         // ===== clean ==============================================
-        clean: ['./generators', './test'],
+        clean: ['<%= babel.compile.dest %>', '<%= babel.testCompile.dest %>', './tmp'],
+
+        // ===== jshint =============================================
+        jshint: {
+            all: [
+                '<%= babel.compile.src.map(function(s) { return babel.compile.cwd + "/" + s }) %>',
+                '<%= babel.testCompile.src.map(function(s) { return babel.testCompile.cwd + "/" + s }) %>',
+                './Gruntfile.js'
+            ],
+            options: {
+                jshintrc: './.jshintrc'
+            }
+        },
 
         // ===== compile ============================================
         babel: {
             compile: {
                 expand: true,
-                src: '**/*.js',
-                dest: './generators',
-                cwd: './src/main'
+                cwd: './src/main',
+                src: ['**/*.js', '!*/templates/**/*'],
+                dest: './generators'
             },
             testCompile: {
                 expand: true,
-                src: '**/*.js',
-                dest: './test',
-                cwd: './src/test'
+                cwd: './src/test',
+                src: ['**/*.js', '!*/fixtures/**/*'],
+                dest: './test'
+            }
+        },
+
+        copy: {
+            templates: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= babel.compile.cwd %>',
+                    src: '<%= babel.compile.src[1].substring(1) %>',
+                    dest: '<%= babel.compile.dest %>'
+                }]
+            },
+            fixtures: {
+                files: [{
+                    expand: true,
+                    cwd: '<%= babel.testCompile.cwd %>',
+                    src: '<%= babel.testCompile.src[1].substring(1) %>',
+                    dest: '<%= babel.testCompile.dest %>'
+                }]
             }
         },
 
         // ===== test ===============================================
-        mochaIstanbul: {
+        mocha_istanbul: {
             coverage: {
                 src: '<%= babel.testCompile.dest %>',
                 options: {
-                    mask: '*.spec.js',
+                    coverage: true,
+                    mask: '**/*.spec.js',
                     check: {
-                        lines: 80,
-                        statements: 80
+                        lines: 70,
+                        statements: 70
                     },
-                    root: './generators',
-                    reportFormats: ['cobertura', 'lcovonly']
+                    root: '<%= babel.compile.dest %>',
+                    excludes: ['<%= babel.compile.src[1].substring(1) %>'],
+                    reportFormats: ['cobertura', 'lcovonly'],
                 }
             }
         },
 
-        istanbul_check_coverage: {
-            default: {
-                options: {
-                    coverageFolder: 'coverage',
-                    check: {
-                        lines: '<%= mochaIstanbul.coverage.options.check.lines %>',
-                        statements: '<%= mochaIstanbul.coverage.options.check.statements %>'
-                    }
-                }
+        // ===== serve ==============================================
+        watch: {
+            sources: {
+                files: './src/**/*.js',
+                tasks: ['test']
             }
         }
     });
 
-    grunt.registerTask('compile-only', []);
-    grunt.registerTask('compile', ['clean', 'compile-only']);
+    grunt.event.on('coverage', function(lcov, done) {
+        require('coveralls').handleInput(lcov, function(err) {
+            if (err) { return done(err); }
+            done();
+        });
+    });
 
-    grunt.registerTask('test-only', []);
+    grunt.registerTask('validate-only', ['jshint']);
+    grunt.registerTask('validate', ['validate-only']);
+
+    grunt.registerTask('compile-only', ['babel', 'copy']);
+    grunt.registerTask('compile', ['validate', 'compile-only']);
+
+    grunt.registerTask('test-only', ['mocha_istanbul']);
     grunt.registerTask('test', ['compile', 'test-only']);
 
     grunt.registerTask('install-only', []);
     grunt.registerTask('install', ['test', 'install-only']);
 
-    grunt.registerTask('default', ['install']);
+    grunt.registerTask('default', ['clean', 'install']);
+    grunt.registerTask('serve', ['clean', 'install', 'watch']);
 };
