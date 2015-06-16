@@ -41,7 +41,8 @@ module.exports = function(grunt) {
                     expand: true,
                     cwd: '<%= babel.compile.cwd %>',
                     src: '<%= babel.compile.src[1].substring(1) %>',
-                    dest: '<%= babel.compile.dest %>'
+                    dest: '<%= babel.compile.dest %>',
+                    dot: true
                 }]
             },
             fixtures: {
@@ -49,7 +50,8 @@ module.exports = function(grunt) {
                     expand: true,
                     cwd: '<%= babel.testCompile.cwd %>',
                     src: '<%= babel.testCompile.src[1].substring(1) %>',
-                    dest: '<%= babel.testCompile.dest %>'
+                    dest: '<%= babel.testCompile.dest %>',
+                    dot: true
                 }]
             }
         },
