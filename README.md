@@ -2,6 +2,7 @@
 
 [![travis build](https://img.shields.io/travis/dominikschreiber/generator-es2015.svg?style=flat-square)](http://travis-ci.org/dominikschreiber/generator-es2015)
 [![coveralls report](https://img.shields.io/coveralls/dominikschreiber/generator-es2015.svg?style=flat-square)](https://coveralls.io/r/dominikschreiber/generator-es2015)
+[![npm package](https://img.shields.io/npm/v/generator-es2015.svg?style=flat-square)](https://npmjs.org/package/generator-es2015)
 [![MIT license](https://img.shields.io/github/license/dominikschreiber/generator-es2015.svg?style=flat-square)](https://github.com/dominikschreiber/generator-es2015/blob/master/LICENSE)
 [![twitter link](https://img.shields.io/badge/twitter-@domischreib-55acee.svg?style=flat-square)](https://twitter.com/@domischreib)
 

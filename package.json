@@ -1,6 +1,6 @@
 {
   "name": "generator-es2015",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "ES2015 projects with BabelJS, Mocha and Istanbul",
   "main": "generators/app/index.js",
   "scripts": {
