@@ -27,7 +27,6 @@ var Gruntfile = (function () {
             config.set('babel', this._createConfigBabel());
             config.set('copy', this._createConfigCopy());
             config.set('mocha_istanbul', this._createConfigMocha());
-            config.set('istanbul_check_coverage', this._createConfigIstanbul());
 
             return config;
         }
@@ -100,21 +99,6 @@ var Gruntfile = (function () {
                         },
                         root: '<%= babel.compile.dest %>',
                         reportFormats: ['cobertura', 'lcovonly']
-                    }
-                }
-            };
-        }
-    }, {
-        key: '_createConfigIstanbul',
-        value: function _createConfigIstanbul() {
-            return {
-                'default': {
-                    options: {
-                        coverageFolder: 'coverage',
-                        check: {
-                            lines: '<%= mochaIstanbul.coverage.options.check.lines %>',
-                            statements: '<%= mochaIstanbul.coverage.options.check.statements %>'
-                        }
                     }
                 }
             };

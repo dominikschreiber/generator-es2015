@@ -18,7 +18,7 @@ var _yeomanGenerator = require('yeoman-generator');
 
 var _fs = require('fs');
 
-var _gruntfile = require('./gruntfile');
+var _Gruntfile = require('./Gruntfile');
 
 var Generator = (function (_Base) {
     function Generator() {
@@ -53,7 +53,7 @@ var Generator = (function (_Base) {
     }, {
         key: 'writing',
         value: function writing() {
-            new _gruntfile.Gruntfile(this.gruntfile).save();
+            new _Gruntfile.Gruntfile(this.gruntfile).save();
         }
     }]);
 

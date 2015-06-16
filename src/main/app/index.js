@@ -5,7 +5,7 @@ import 'babel/polyfill';
 import {Base} from 'yeoman-generator';
 import {readdir} from 'fs';
 
-import {Gruntfile} from './gruntfile';
+import {Gruntfile} from './Gruntfile';
 
 export default class Generator extends Base {
     constructor(...args) {
